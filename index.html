@@ -471,12 +471,12 @@ async function fetchKmaActual(lat, lon) {
   var y = now.getFullYear(), mo = String(now.getMonth()+1).padStart(2,'0'), d = String(now.getDate()).padStart(2,'0');
   baseDate = ''+y+mo+d;
   baseTime = String(hh).padStart(2,'0')+'00';
-  var key = 'dQ-R9BLaQxqPkfQS2iMaPA';
-  var url = 'https://apihub.kma.go.kr/api/typ02/openApi/VilageFcstInfoService_2.0/getUltraSrtNcst'
+  var key = '95ebad716ece95a2317c3b08d0a9146994f3279018cf5e84c6294c2fc03f808f';
+  var url = 'https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst'
     +'?pageNo=1&numOfRows=10&dataType=JSON'
     +'&base_date='+baseDate+'&base_time='+baseTime
     +'&nx='+g.x+'&ny='+g.y
-    +'&authKey='+key;
+    +'&serviceKey='+key;
   var r = await fetch(url);
   var d2 = await r.json();
   var items = d2.response.body.items.item;
