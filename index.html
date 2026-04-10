@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="zh">
 <head>
@@ -246,11 +247,11 @@ var LANG = {
     legendYest: '昨天',
     legendDiff: '差值',
     dataTitle: '📊 数据来源',
-    dataLine1: '天气预报数据：<a href="https://open-meteo.com" target="_blank">Open-Meteo</a>（免费开源气象API，韩国使用KMA气象厅模型）',
-    dataLine2: '城市坐标查询：<a href="https://open-meteo.com/en/docs/geocoding-api" target="_blank">Open-Meteo Geocoding API</a>',
-    dataLine3: '空气质量数据：<a href="https://open-meteo.com/en/docs/air-quality-api" target="_blank">Open-Meteo Air Quality API</a>（来源：CAMS全球大气监测）',
-    dataLine4: '📍 使用「当前位置」功能时，GPS坐标直接传入气象模型，精度最高',
-    dataLine5: '⏱ 数据每小时更新，页面每30分钟自动刷新',
+    dataLine1: '当前气温·湿度·风速：<a href="https://apihub.kma.go.kr" target="_blank">기상청 API허브</a>（초단기실황，实测值）',
+    dataLine2: '预报·历史天气：<a href="https://open-meteo.com" target="_blank">Open-Meteo</a>（KMA数值预报模型）',
+    dataLine3: '城市坐标：<a href="https://open-meteo.com/en/docs/geocoding-api" target="_blank">Open-Meteo Geocoding API</a>',
+    dataLine4: '空气质量：<a href="https://open-meteo.com/en/docs/air-quality-api" target="_blank">Open-Meteo Air Quality API</a>（CAMS）',
+    dataLine5: '⏱ 实测数据每小时40分更新',
   },
   ko: {
     days: ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'],
@@ -301,11 +302,11 @@ var LANG = {
     legendYest: '어제',
     legendDiff: '차이',
     dataTitle: '📊 데이터 출처',
-    dataLine1: '날씨 예보：<a href="https://open-meteo.com" target="_blank">Open-Meteo</a>（무료 오픈소스 기상 API, 한국은 KMA 기상청 모델 사용）',
-    dataLine2: '도시 좌표：<a href="https://open-meteo.com/en/docs/geocoding-api" target="_blank">Open-Meteo Geocoding API</a>',
-    dataLine3: '대기질 데이터：<a href="https://open-meteo.com/en/docs/air-quality-api" target="_blank">Open-Meteo Air Quality API</a>（출처: CAMS 전 지구 대기 모니터링）',
-    dataLine4: '📍 현재 위치 기능 사용 시 GPS 좌표를 기상 모델에 직접 전달하여 가장 정확합니다',
-    dataLine5: '⏱ 데이터는 매시간 업데이트, 페이지는 30분마다 자동 새로고침',
+    dataLine1: '현재 기온·습도·풍속：<a href="https://apihub.kma.go.kr" target="_blank">기상청 API허브</a>（초단기실황, 실측값）',
+    dataLine2: '예보·과거 날씨：<a href="https://open-meteo.com" target="_blank">Open-Meteo</a>（KMA 수치예보 모델）',
+    dataLine3: '도시 좌표：<a href="https://open-meteo.com/en/docs/geocoding-api" target="_blank">Open-Meteo Geocoding API</a>',
+    dataLine4: '대기질 데이터：<a href="https://open-meteo.com/en/docs/air-quality-api" target="_blank">Open-Meteo Air Quality API</a>（CAMS）',
+    dataLine5: '⏱ 실황 데이터는 매시 40분 업데이트',
   }
 };
 
@@ -437,6 +438,61 @@ async function loadWeather(silent){
   }
 }
 
+// 경위도 → KMA 격자 변환
+function latLonToGrid(lat, lon) {
+  var RE = 6371.00877, GRID = 5.0, SLAT1 = 30.0, SLAT2 = 60.0, OLON = 126.0, OLAT = 38.0, XO = 43, YO = 136;
+  var DEGRAD = Math.PI / 180.0;
+  var re = RE / GRID, slat1 = SLAT1 * DEGRAD, slat2 = SLAT2 * DEGRAD, olon = OLON * DEGRAD, olat = OLAT * DEGRAD;
+  var sn = Math.tan(Math.PI * 0.25 + slat2 * 0.5) / Math.tan(Math.PI * 0.25 + slat1 * 0.5);
+  sn = Math.log(Math.cos(slat1) / Math.cos(slat2)) / Math.log(sn);
+  var sf = Math.tan(Math.PI * 0.25 + slat1 * 0.5); sf = Math.pow(sf, sn) * Math.cos(slat1) / sn;
+  var ro = Math.tan(Math.PI * 0.25 + olat * 0.5); ro = re * sf / Math.pow(ro, sn);
+  var ra = Math.tan(Math.PI * 0.25 + lat * DEGRAD * 0.5); ra = re * sf / Math.pow(ra, sn);
+  var theta = lon * DEGRAD - olon; if(theta > Math.PI) theta -= 2*Math.PI; if(theta < -Math.PI) theta += 2*Math.PI;
+  theta *= sn;
+  return { x: Math.floor(ra * Math.sin(theta) + XO + 0.5), y: Math.floor(ro - ra * Math.cos(theta) + YO + 0.5) };
+}
+
+// KMA 초단기실황 날씨코드 → WMO코드 변환
+function ptyToWmo(pty, sky) {
+  // pty: 0=없음,1=비,2=비/눈,3=눈,4=소나기  sky: 1=맑음,3=구름많음,4=흐림
+  if(pty===1) return 61; if(pty===2) return 71; if(pty===3) return 73; if(pty===4) return 80;
+  if(sky===1) return 0; if(sky===3) return 2; if(sky===4) return 3; return 1;
+}
+
+async function fetchKmaActual(lat, lon) {
+  var g = latLonToGrid(lat, lon);
+  var now = new Date();
+  // 초단기실황은 매시 40분 발표, 현재시각 기준 가장 최근 발표시각 계산
+  var baseDate, baseTime;
+  var mm = now.getMinutes();
+  var hh = now.getHours();
+  if(mm < 40) { hh = hh - 1; if(hh < 0){ hh = 23; now.setDate(now.getDate()-1); } }
+  var y = now.getFullYear(), mo = String(now.getMonth()+1).padStart(2,'0'), d = String(now.getDate()).padStart(2,'0');
+  baseDate = ''+y+mo+d;
+  baseTime = String(hh).padStart(2,'0')+'00';
+  var key = 'dQ-R9BLaQxqPkfQS2iMaPA';
+  var url = 'https://apihub.kma.go.kr/api/typ02/openApi/VilageFcstInfoService_2.0/getUltraSrtNcst'
+    +'?pageNo=1&numOfRows=10&dataType=JSON'
+    +'&base_date='+baseDate+'&base_time='+baseTime
+    +'&nx='+g.x+'&ny='+g.y
+    +'&authKey='+key;
+  var r = await fetch(url);
+  var d2 = await r.json();
+  var items = d2.response.body.items.item;
+  var out = {};
+  items.forEach(function(it){ out[it.category] = parseFloat(it.obsrValue); });
+  // T1H=기온, REH=습도, WSD=풍속, PTY=강수형태, VEC=풍향
+  return {
+    temp: Math.round(out['T1H']),
+    humid: Math.round(out['REH']),
+    wind: out['WSD'],
+    pty: out['PTY'],
+    sky: null, // 실황에는 SKY없음, PTY로만 판단
+    wmo: ptyToWmo(out['PTY'], 1)
+  };
+}
+
 async function loadWeatherByCoords(lat, lon, cityName, silent){
   lastLat = lat; lastLon = lon; lastCityName = cityName;
   setLang(lat, lon);
@@ -464,19 +520,25 @@ async function loadWeatherByCoords(lat, lon, cityName, silent){
       if(ar.ok) air = await ar.json();
     }catch(e){}
 
+    // 한국이면 KMA 초단기실황으로 현재 기온/습도/풍속 덮어쓰기
+    let kmaActual = null;
+    if(isKorea(lat, lon)){
+      try{ kmaActual = await fetchKmaActual(lat, lon); }catch(e){ console.warn('KMA실황 실패, Open-Meteo 사용:', e); }
+    }
+
     if(cityName === L('curLoc') || cityName === '当前位置' || cityName === '현재 위치'){
       cityName = L('curLocIcon');
     }
 
     lastRefreshTime = new Date();
-    render(fc, air, cityName);
+    render(fc, air, cityName, kmaActual);
     scheduleAutoRefresh();
   }catch(e){
     document.getElementById('content').innerHTML = '<div class="error-msg">'+e.message+'</div>';
   }
 }
 
-function render(fc, air, cityName){
+function render(fc, air, cityName, kmaActual){
   const now = new Date(), nowH = now.getHours();
   var days = L('days');
   var dateStr;
@@ -504,7 +566,18 @@ function render(fc, air, cityName){
   }
   if(ci<0) ci = Math.max(0, hours.length-1);
 
-  const cur = hours[ci];
+  let cur = hours[ci];
+  // 한국이면 KMA 초단기실황으로 현재값 덮어쓰기
+  if(kmaActual){
+    cur = {
+      temp: kmaActual.temp,
+      feels: cur.feels,
+      humid: kmaActual.humid,
+      wind: kmaActual.wind,
+      wmo: kmaActual.wmo,
+      time: cur.time
+    };
+  }
   const yestDate = new Date(now-86400000).toDateString();
   let yi = -1;
   for(var tj=0;tj<hours.length;tj++){
