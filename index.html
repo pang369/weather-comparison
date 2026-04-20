@@ -17,25 +17,27 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .app { padding: 1.1rem 1rem 3rem; max-width: 420px; margin: 0 auto; }
 
 .search-row { display: flex; align-items: center; margin-bottom: 0.6rem; background: #fff; border: 1.5px solid #ddd; border-radius: 12px; padding: 0 4px 0 10px; }
-.search-row input { flex: 1; font-size: 16px; padding: 10px 6px; border: none; background: transparent; outline: none; color: #1a1a1a; min-width: 0; }
-.search-row input::placeholder { color: #aaa; }
-.search-btn { background: none; border: none; font-size: 22px; cursor: pointer; padding: 6px 8px; color: #378ADD; display: flex; align-items: center; flex-shrink: 0; }
-
+.search-row input { display: none; }
+.search-btn { background: none; border: none; font-size: 22px; cursor: pointer; padding: 6px 8px; color: #378ADD; display: flex; align-items: center; flex-shrink: 0; margin-left: auto; }
+.sel-region-wrap { position: relative; flex-shrink: 0; }
+.sel-region-btn { display: flex; align-items: center; cursor: pointer; user-select: none; padding: 10px 10px 10px 0; border-right: 1.5px solid #eee; margin-right: 8px; }
+.sel-region-name { font-size: 18px; font-weight: 700; color: #222; white-space: nowrap; }
+.sel-region-tri { font-size: 10px; color: #555; margin-left: 8px; }
+.sel-city-wrap { position: relative; flex-shrink: 0; }
+.sel-city-btn { display: flex; align-items: center; cursor: pointer; user-select: none; padding: 10px 0; }
+.sel-city-name { font-size: 18px; font-weight: 700; color: #222; white-space: nowrap; }
+.sel-city-tri { font-size: 10px; color: #555; margin-left: 24px; }
+.drop-panel { display: none; position: absolute; top: calc(100% + 6px); left: 0; background: #fff; border: 1.5px solid #e0e0e0; border-radius: 14px; z-index: 300; min-width: 150px; box-shadow: 0 6px 24px rgba(0,0,0,0.12); overflow: hidden; max-height: 70vh; overflow-y: auto; }
+.drop-panel.open { display: block; }
+.drop-item { font-size: 15px; font-weight: 600; padding: 10px 16px; cursor: pointer; color: #1a1a1a; border-bottom: 1px solid #f2f2f2; }
+.drop-item:last-child { border-bottom: none; }
+.drop-item:hover { background: #f0f6ff; color: #378ADD; }
 .gps-btn { display: flex; align-items: center; gap: 6px; background: #378ADD; color: #fff; border: none; border-radius: 10px; padding: 9px 14px; font-size: 14px; font-weight: 600; cursor: pointer; margin-bottom: 0.75rem; width: 100%; justify-content: center; }
 .gps-btn:active { opacity: 0.85; }
 .gps-btn.loading { background: #aaa; cursor: not-allowed; }
-
-.city-dropdown { position: relative; flex-shrink: 0; }
-.city-trigger { display: flex; align-items: center; gap: 3px; cursor: pointer; padding: 6px 4px 6px 0; user-select: none; border-right: 1.5px solid #eee; margin-right: 6px; padding-right: 10px; }
-.city-trigger-name { font-size: 15px; font-weight: 700; color: #1a1a1a; white-space: nowrap; }
-.city-trigger-region { font-size: 16px; font-weight: 600; color: #555; white-space: nowrap; }
-.city-trigger-arrow { font-size: 10px; color: #1a1a1a; font-weight: 900; margin-left: 2px; }
-.dropdown-panel { display: none; position: absolute; top: calc(100% + 8px); left: 0; background: #fff; border: 1.5px solid #e0e0e0; border-radius: 14px; z-index: 200; min-width: 180px; box-shadow: 0 6px 24px rgba(0,0,0,0.12); overflow: hidden; max-height: 70vh; overflow-y: auto; }
-.dropdown-panel.open { display: block; }
-.dropdown-group-label { font-size: 12px; font-weight: 700; color: #999; padding: 9px 14px 3px; background: #f8f8f8; letter-spacing: 0.03em; }
-.dropdown-item { font-size: 16px; font-weight: 600; padding: 10px 16px; cursor: pointer; color: #1a1a1a; border-bottom: 1px solid #f2f2f2; }
-.dropdown-item:last-child { border-bottom: none; }
-.dropdown-item:active { background: #f0f6ff; color: #378ADD; }
+.city-dropdown { display: none; }
+.dropdown-panel { display: none !important; }
+.dropdown-group-label, .dropdown-item { display: none; }
 
 .top-line { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 2px; }
 .city-name { font-size: 22px; font-weight: 700; color: #1a1a1a; }
@@ -75,32 +77,32 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .aqi-pm { font-size: 16px; color: #333; font-weight: 400; }
 
 .hours-wrapper { display: flex; align-items: flex-start; gap: 0; }
-.hours-legend-col { display: flex; flex-direction: column; align-items: flex-end; padding: 7px 6px 7px 0; gap: 2px; min-width: 42px; flex-shrink: 0; }
+.hours-legend-col { display: flex; flex-direction: column; align-items: flex-end; padding: 7px 6px 7px 0; gap: 0; min-width: 42px; flex-shrink: 0; }
 .leg-item { font-size: 15px; color: #888; font-weight: 400; white-space: nowrap; }
 .leg-time  { height: 22px; display: flex; align-items: center; }
-.leg-today { height: 28px; display: flex; align-items: center; }
-.leg-sep   { height: 9px;  display: flex; align-items: center; }
-.leg-yest  { height: 24px; display: flex; align-items: center; }
-.leg-diff  { height: 22px; display: flex; align-items: center; }
+.leg-today { height: 32px; display: flex; align-items: center; }
+.leg-sep   { height: 18px; display: flex; align-items: center; }
+.leg-yest  { height: 32px; display: flex; align-items: center; }
+.leg-diff  { height: 30px; display: flex; align-items: center; color: #185FA5; font-weight: 700; }
 
 .hours-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 0.75rem; }
 .hours-scroll::-webkit-scrollbar { height: 3px; }
 .hours-scroll::-webkit-scrollbar-track { background: transparent; }
 .hours-scroll::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
 .hours-table { display: flex; gap: 4px; min-width: max-content; padding-bottom: 4px; }
-.hour-col { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 64px; padding: 7px 4px; border-radius: 10px; }
+.hour-col { display: flex; flex-direction: column; align-items: center; gap: 0; min-width: 64px; padding: 7px 4px; border-radius: 10px; }
 .hour-col.current-hour { background: #e8e8e8; }
 .h-label { font-size: 17px; color: #888; font-weight: 400; height: 22px; display: flex; align-items: center; }
-.h-today { font-size: 22px; font-weight: 700; height: 28px; display: flex; align-items: center; }
+.h-today { font-size: 22px; font-weight: 700; height: 32px; display: flex; align-items: center; }
 .current-hour .h-today { color: #378ADD; }
 .current-hour .h-label { color: #378ADD; }
-.h-sep { height: 9px; display: flex; align-items: center; width: 100%; justify-content: center; }
+.h-sep { height: 18px; display: flex; align-items: center; width: 100%; justify-content: center; }
 .h-sep-line { width: 20px; height: 1px; background: #d0d0d0; }
-.h-yest { font-size: 18px; color: #333; font-weight: 600; height: 24px; display: flex; align-items: center; }
-.h-diff { font-size: 15px; font-weight: 900; height: 22px; display: flex; align-items: center; gap: 1px; }
+.h-yest { font-size: 18px; color: #333; font-weight: 600; height: 32px; display: flex; align-items: center; }
+.h-diff { font-size: 15px; font-weight: 900; height: 30px; display: flex; align-items: center; gap: 1px; }
 .h-diff.cold { color: #185FA5; }
 .h-diff.warm { color: #D85A30; }
-.h-diff.same { color: #555; font-weight: 700; }
+.h-diff.same { color: #888; font-weight: 700; }
 
 .divider { height: 1px; background: #ddd; margin: 1rem 0; }
 .section-label { font-size: 16px; color: #222; margin-bottom: 7px; font-weight: 600; }
@@ -124,7 +126,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .past-week-row .week-range { color: #888; font-weight: 600; }
 .past-week-row .week-low { color: #aaa; font-weight: 600; }
 
-.refresh-bar { font-size: 13px; color: #aaa; text-align: right; margin-bottom: 8px; }
+.refresh-bar { font-size: 15px; color: #666; text-align: right; margin-bottom: 8px; font-weight: 500; }
 
 .data-source { margin-top: 2rem; padding: 1rem; background: #f8f8f8; border-radius: 12px; font-size: 12px; color: #888; line-height: 1.8; }
 .data-source a { color: #378ADD; text-decoration: none; }
@@ -135,51 +137,26 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 <body>
 <div class="app" translate="no">
   <div class="search-row">
-    <div class="city-dropdown" id="cityDropdown">
-      <div class="city-trigger" onclick="toggleDropdown()">
-        <span class="city-trigger-region" id="triggerRegion">Korea</span>
-        <span class="city-trigger-arrow" style="margin-left:10px">▼</span>
+    <!-- Region selector: Korea ▼ -->
+    <div class="sel-region-wrap" id="selRegionWrap">
+      <div class="sel-region-btn" id="selRegionBtn">
+        <span class="sel-region-name" id="selRegionName">Korea</span>
+        <span class="sel-region-tri">▼</span>
       </div>
-      <div class="dropdown-panel" id="dropdownPanel">
-        <div class="dropdown-group-label">🇰🇷 韩国</div>
-        <div class="dropdown-item" onclick="selectCity('Seoul','서울','Korea')">서울</div>
-        <div class="dropdown-item" onclick="selectCity('Busan','부산','Korea')">부산</div>
-        <div class="dropdown-item" onclick="selectCity('Jeju','제주','Korea')">제주</div>
-        <div class="dropdown-item" onclick="selectCity('Incheon','인천','Korea')">인천</div>
-        <div class="dropdown-item" onclick="selectCity('Daejeon','대전','Korea')">대전</div>
-        <div class="dropdown-item" onclick="selectCity('Jeonju','전주','Korea')">전주</div>
-        <div class="dropdown-group-label">🇨🇳 中国</div>
-        <div class="dropdown-item" onclick="selectCity('Beijing','北京','China')">北京</div>
-        <div class="dropdown-item" onclick="selectCity('Shanghai','上海','China')">上海</div>
-        <div class="dropdown-item" onclick="selectCity('Guangzhou','广州','China')">广州</div>
-        <div class="dropdown-item" onclick="selectCity('Chengdu','成都','China')">成都</div>
-        <div class="dropdown-item" onclick="selectCity('Shenzhen','深圳','China')">深圳</div>
-        <div class="dropdown-group-label">🇺🇸 美国</div>
-        <div class="dropdown-item" onclick="selectCity('New York','New York','USA')">New York</div>
-        <div class="dropdown-item" onclick="selectCity('Los Angeles','Los Angeles','USA')">Los Angeles</div>
-        <div class="dropdown-item" onclick="selectCity('Chicago','Chicago','USA')">Chicago</div>
-        <div class="dropdown-item" onclick="selectCity('Dallas','Dallas','USA')">Dallas</div>
-        <div class="dropdown-item" onclick="selectCity('Houston','Houston','USA')">Houston</div>
-        <div class="dropdown-group-label">🇪🇸 西班牙</div>
-        <div class="dropdown-item" onclick="selectCity('Madrid','Madrid','España')">Madrid</div>
-        <div class="dropdown-item" onclick="selectCity('Barcelona','Barcelona','España')">Barcelona</div>
-        <div class="dropdown-item" onclick="selectCity('Malaga','Málaga','España')">Málaga</div>
-        <div class="dropdown-item" onclick="selectCity('Alicante','Alicante','España')">Alicante</div>
-        <div class="dropdown-group-label">🇹🇭 泰国</div>
-        <div class="dropdown-item" onclick="selectCity('Bangkok','Bangkok','Thailand')">Bangkok</div>
-        <div class="dropdown-item" onclick="selectCity('Chiang Mai','Chiang Mai','Thailand')">Chiang Mai</div>
-        <div class="dropdown-group-label">🇸🇬 新加坡</div>
-        <div class="dropdown-item" onclick="selectCity('Singapore','Singapore','Singapore')">Singapore</div>
-        <div class="dropdown-group-label">🇦🇺 澳洲</div>
-        <div class="dropdown-item" onclick="selectCity('Sydney','Sydney','Australia')">Sydney</div>
-        <div class="dropdown-item" onclick="selectCity('Melbourne','Melbourne','Australia')">Melbourne</div>
-        <div class="dropdown-group-label">🇳🇿 新西兰</div>
-        <div class="dropdown-item" onclick="selectCity('Auckland','Auckland','New Zealand')">Auckland</div>
-      </div>
+      <div class="drop-panel" id="regionDropPanel"></div>
     </div>
-    <input type="text" id="cityInput" placeholder="或输入城市名" value="Seoul" style="font-size:17px"/>
-    <span style="font-size:11px;color:#1a1a1a;font-weight:900;padding:0 4px;margin-right:20px;cursor:pointer;flex-shrink:0" onclick="toggleDropdown()">▼</span>
-    <button class="search-btn" onclick="loadWeather()" title="查询">🔍</button>
+    <!-- City selector: Seoul ▼ -->
+    <div class="sel-city-wrap" id="selCityWrap">
+      <div class="sel-city-btn" id="selCityBtn">
+        <span class="sel-city-name" id="selCityName">Seoul</span>
+        <span class="sel-city-tri">▼</span>
+      </div>
+      <div class="drop-panel" id="cityDropPanel"></div>
+    </div>
+    <!-- hidden input still used by loadWeather() -->
+    <input type="text" id="cityInput" value="Seoul" style="display:none"/>
+    <!-- search icon pushed to right -->
+    <button class="search-btn" onclick="loadWeather()" title="조회">🔍</button>
   </div>
 
   <button class="gps-btn" id="gpsBtn" onclick="useGPS()">
@@ -209,7 +186,7 @@ var LANG = {
     wind: function(s){if(s<1)return'无风';if(s<3)return'微风';if(s<6)return'轻风';if(s<10)return'和风';if(s<14)return'清风';if(s<20)return'强风';return'暴风';},
     humid: function(h){return h<40?'干燥':h<70?'适中':'潮湿';},
     aqi: function(p){if(p<12)return{label:'优',color:'#3B6D11',pct:10};if(p<35)return{label:'良',color:'#BA7517',pct:30};if(p<55)return{label:'轻度污染',color:'#E24B4A',pct:55};if(p<150)return{label:'中度污染',color:'#993C1D',pct:70};if(p<250)return{label:'重度污染',color:'#712B13',pct:85};return{label:'严重污染',color:'#501313',pct:100};},
-    uv: function(v){if(v<3)return{label:'弱',color:'#4CAF50',level:1};if(v<6)return{label:'中等',color:'#FFC107',level:2};if(v<8)return{label:'强',color:'#FF9800',level:3};if(v<11)return{label:'很强',color:'#F44336',level:4};return{label:'极强',color:'#9C27B0',level:5};},
+    uv: function(v){if(v<3)return{label:'弱',color:'#3DAA4A',level:1};if(v<6)return{label:'中等',color:'#C9A800',level:2};if(v<8)return{label:'强',color:'#E07800',level:3};if(v<11)return{label:'很强',color:'#880000',level:4};return{label:'极强',color:'#4A0060',level:5};},
     alerts: {
       bigwind: '大风预警：{v}m/s，出行注意安全',
       thunder: '雷暴天气，尽量减少外出',
@@ -264,7 +241,7 @@ var LANG = {
     wind: function(s){if(s<1)return'고요';if(s<3)return'실바람';if(s<6)return'약한 바람';if(s<10)return'산들바람';if(s<14)return'건들바람';if(s<20)return'강풍';return'폭풍';},
     humid: function(h){return h<40?'건조':h<70?'보통':'습함';},
     aqi: function(p){if(p<12)return{label:'좋음',color:'#3B6D11',pct:10};if(p<35)return{label:'보통',color:'#BA7517',pct:30};if(p<55)return{label:'나쁨',color:'#E24B4A',pct:55};if(p<150)return{label:'매우 나쁨',color:'#993C1D',pct:70};if(p<250)return{label:'위험',color:'#712B13',pct:85};return{label:'매우 위험',color:'#501313',pct:100};},
-    uv: function(v){if(v<3)return{label:'낮음',color:'#4CAF50',level:1};if(v<6)return{label:'보통',color:'#FFC107',level:2};if(v<8)return{label:'높음',color:'#FF9800',level:3};if(v<11)return{label:'매우 높음',color:'#F44336',level:4};return{label:'위험',color:'#9C27B0',level:5};},
+    uv: function(v){if(v<3)return{label:'낮음',color:'#3DAA4A',level:1};if(v<6)return{label:'보통',color:'#C9A800',level:2};if(v<8)return{label:'높음',color:'#E07800',level:3};if(v<11)return{label:'매우 높음',color:'#880000',level:4};return{label:'위험',color:'#4A0060',level:5};},
     alerts: {
       bigwind: '강풍 주의: {v}m/s, 외출 시 주의하세요',
       thunder: '뇌우 예보, 외출을 자제하세요',
@@ -361,20 +338,104 @@ function getAlerts(cur) {
   return a;
 }
 
-function toggleDropdown(){
-  document.getElementById('dropdownPanel').classList.toggle('open');
+// ── Two-level dropdown ──────────────────────────────────
+var CITY_DATA = {
+  'Korea':     { flag:'🇰🇷', cities: [['Seoul','서울'],['Busan','부산'],['Incheon','인천'],['Daegu','대구'],['Daejeon','대전'],['Gwangju','광주'],['Jeju','제주'],['Jeonju','전주']] },
+  'China':     { flag:'🇨🇳', cities: [['Beijing','北京'],['Shanghai','上海'],['Guangzhou','广州'],['Shenzhen','深圳'],['Chengdu','成都'],['Hangzhou','杭州'],['Wuhan','武汉']] },
+  'USA':       { flag:'🇺🇸', cities: [['New York','New York'],['Los Angeles','Los Angeles'],['Chicago','Chicago'],['Houston','Houston'],['Dallas','Dallas'],['Seattle','Seattle'],['Miami','Miami']] },
+  'España':    { flag:'🇪🇸', cities: [['Madrid','Madrid'],['Barcelona','Barcelona'],['Malaga','Málaga'],['Alicante','Alicante'],['Seville','Sevilla']] },
+  'Japan':     { flag:'🇯🇵', cities: [['Tokyo','東京'],['Osaka','大阪'],['Kyoto','京都'],['Fukuoka','福岡'],['Sapporo','札幌']] },
+  'Thailand':  { flag:'🇹🇭', cities: [['Bangkok','Bangkok'],['Chiang Mai','Chiang Mai'],['Phuket','Phuket']] },
+  'Singapore': { flag:'🇸🇬', cities: [['Singapore','Singapore']] },
+  'Australia': { flag:'🇦🇺', cities: [['Sydney','Sydney'],['Melbourne','Melbourne'],['Brisbane','Brisbane'],['Perth','Perth']] },
+  'New Zealand':{ flag:'🇳🇿', cities: [['Auckland','Auckland'],['Wellington','Wellington']] }
+};
+
+var currentRegion = 'Korea';
+
+function buildRegionDropdown() {
+  var panel = document.getElementById('regionDropPanel');
+  panel.innerHTML = '';
+  Object.keys(CITY_DATA).forEach(function(region) {
+    var d = document.createElement('div');
+    d.className = 'drop-item';
+    d.textContent = CITY_DATA[region].flag + ' ' + region;
+    d.onclick = function(e) { e.stopPropagation(); pickRegion(region); };
+    panel.appendChild(d);
+  });
 }
-function selectCity(eng, localName, region){
+
+function buildCityDropdown(region) {
+  var panel = document.getElementById('cityDropPanel');
+  panel.innerHTML = '';
+  var cities = CITY_DATA[region] ? CITY_DATA[region].cities : [];
+  cities.forEach(function(pair) {
+    var eng = pair[0], local = pair[1];
+    var d = document.createElement('div');
+    d.className = 'drop-item';
+    d.textContent = local;
+    d.onclick = function(e) { e.stopPropagation(); pickCity(eng, local); };
+    panel.appendChild(d);
+  });
+}
+
+function closeAllDrops() {
+  document.getElementById('regionDropPanel').classList.remove('open');
+  document.getElementById('cityDropPanel').classList.remove('open');
+}
+
+document.getElementById('selRegionBtn').addEventListener('click', function(e) {
+  e.stopPropagation();
+  var rp = document.getElementById('regionDropPanel');
+  var wasOpen = rp.classList.contains('open');
+  closeAllDrops();
+  if (!wasOpen) rp.classList.add('open');
+});
+
+document.getElementById('selCityBtn').addEventListener('click', function(e) {
+  e.stopPropagation();
+  var cp = document.getElementById('cityDropPanel');
+  var wasOpen = cp.classList.contains('open');
+  closeAllDrops();
+  if (!wasOpen) cp.classList.add('open');
+});
+
+document.addEventListener('click', closeAllDrops);
+
+function pickRegion(region) {
+  currentRegion = region;
+  document.getElementById('selRegionName').textContent = region;
+  buildCityDropdown(region);
+  // auto-select first city
+  var cities = CITY_DATA[region] ? CITY_DATA[region].cities : [];
+  if (cities.length) pickCity(cities[0][0], cities[0][1]);
+  else closeAllDrops();
+}
+
+function pickCity(eng, local) {
+  document.getElementById('selCityName').textContent = local || eng;
   document.getElementById('cityInput').value = eng;
-  document.getElementById('triggerLabel').textContent = localName;
-  if(document.getElementById('triggerRegion')) document.getElementById('triggerRegion').textContent = region || eng;
-  document.getElementById('dropdownPanel').classList.remove('open');
+  closeAllDrops();
   loadWeather();
 }
-document.addEventListener('click', function(e){
-  var dd = document.getElementById('cityDropdown');
-  if(dd && !dd.contains(e.target)) document.getElementById('dropdownPanel').classList.remove('open');
-});
+
+// keep old selectCity() working (called by GPS + render paths)
+function selectCity(eng, local, region) {
+  if (region) {
+    currentRegion = region;
+    document.getElementById('selRegionName').textContent = region;
+    buildCityDropdown(region);
+  }
+  document.getElementById('selCityName').textContent = local || eng;
+  document.getElementById('cityInput').value = eng;
+  closeAllDrops();
+  loadWeather();
+}
+
+function toggleDropdown() { /* no-op, replaced */ }
+
+buildRegionDropdown();
+buildCityDropdown('Korea');
 
 function useGPS(){
   var btn = document.getElementById('gpsBtn');
@@ -782,14 +843,14 @@ function render(fc, air, cityName, kmaActual, fcPast, fcHistory){
     if(uvArr[uvi2]!==null && uvArr[uvi2]!==undefined && !isNaN(uvArr[uvi2])){ uvVal=uvArr[uvi2]; break; }
   }
   const uvi = L('uv')(uvVal);
-  const uvColors = ['#4CAF50','#FFC107','#FF9800','#F44336','#9C27B0'];
-  // UV 바: 각 세그먼트를 relative로 감싸고 현재 레벨 세그먼트 위에 ▲ 마커
-  var uvLevel = uvi.level; // 1~5
+  const uvColors = ['#3DAA4A','#C9A800','#E07800','#880000','#4A0060'];
+  var uvLevel = uvi.level;
   var uvSegsHTML = uvColors.map(function(c,i){
     var isActive = i < uvLevel;
-    var isCurrent = i === uvLevel-1; // 현재 레벨 세그먼트
+    var isCurrent = i === uvLevel-1;
+    var segColor = isActive ? c : (i===3?'#AA2020':i===4?'#6A1880':i===2?'#B05800':i===1?'#A08800':'#2D8A3A');
     return '<div style="flex:1;position:relative">'+
-      '<div style="height:8px;border-radius:4px;background:'+c+';opacity:'+(isActive?'1':'0.28')+'"></div>'+
+      '<div style="height:8px;border-radius:4px;background:'+segColor+'"></div>'+
       (isCurrent?'<div style="position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);font-size:10px;color:'+c+';line-height:1">▲</div>':'')+
     '</div>';
   }).join('');
@@ -930,7 +991,7 @@ function render(fc, air, cityName, kmaActual, fcPast, fcHistory){
         '<div class="card-range-val">'+(todayHigh!=='--'?todayHigh+'° / '+todayLow+'°':'--')+'</div>'+
       '</div>'+
       '<div class="now-card" id="yest-card" style="display:flex;flex-direction:column">'+
-        '<div id="yest-top" style="font-size:13px;color:#aaa;font-weight:500;margin-bottom:10px;min-height:44px;display:flex;align-items:center">'+L('yesterday')+' '+nowH+L('hour')+'</div>'+
+        '<div id="yest-top" style="font-size:15px;color:#666;font-weight:600;margin-bottom:10px;min-height:44px;display:flex;align-items:center">'+L('yesterday')+' '+nowH+L('hour')+'</div>'+
         '<div class="card-inline"><span class="card-header" style="visibility:hidden">x</span><span class="card-temp">'+(yest.temp !== null ? yest.temp+'°' : '--')+'</span></div>'+
         '<div class="card-desc">'+(yest.wmo !== null ? wmoDesc(yest.wmo) : (currentLang==='ko'?'정보 없음':'暂无数据'))+'</div>'+
         '<div style="flex:1;min-height:12px"></div>'+
