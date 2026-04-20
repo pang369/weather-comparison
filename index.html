@@ -162,7 +162,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
   <button class="gps-btn" id="gpsBtn" onclick="useGPS()">
     <svg width="16" height="20" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
       <path d="M7 0C3.13 0 0 3.13 0 7c0 5.25 7 11 7 11s7-5.75 7-11c0-3.87-3.13-7-7-7z" fill="#2ecc71" stroke="#222" stroke-width="0.8"/>
-      <circle cx="7" cy="7" r="3.2" fill="#378ADD"/>
+      <circle cx="7" cy="7" r="3.2" fill="#fff"/>
     </svg>
     <span id="gpsBtnText">使用我的当前位置（最准确）</span>
   </button>
@@ -971,13 +971,11 @@ function render(fc, air, cityName, kmaActual, fcPast, fcHistory){
 
   document.getElementById('content').innerHTML =
     '<div class="refresh-bar">'+refreshStr+'</div>'+
-    '<div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:0.85rem">'+
-      '<div>'+
-        (cityName ? '<div class="city-name" style="font-size:20px;font-weight:700;margin-bottom:2px;display:flex;align-items:center;gap:5px">'+(cityName.startsWith('📍')?'<svg width="13" height="17" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;margin-top:1px"><path d="M7 0C3.13 0 0 3.13 0 7c0 5.25 7 11 7 11s7-5.75 7-11c0-3.87-3.13-7-7-7z" fill="#2ecc71" stroke="#222" stroke-width="0.8"/><circle cx="7" cy="7" r="3.2" fill="#378ADD"/></svg>'+cityName.slice(2):cityName)+'</div>' : '')+
-        '<div class="clock-line" id="clock" style="font-size:38px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1;color:#1a1a1a;margin:0">--:--:--</div>'+
-      '</div>'+
-      '<div class="date-line" style="text-align:right;font-size:26px;font-weight:700;color:#378ADD;padding-bottom:4px;white-space:nowrap">'+dateStr+'</div>'+
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">'+
+      (cityName ? '<div class="city-name" style="font-size:20px;font-weight:700;display:flex;align-items:center;gap:5px">'+(cityName.startsWith('📍')?'<svg width="13" height="17" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;margin-top:1px"><path d="M7 0C3.13 0 0 3.13 0 7c0 5.25 7 11 7 11s7-5.75 7-11c0-3.87-3.13-7-7-7z" fill="#2ecc71" stroke="#222" stroke-width="0.8"/><circle cx="7" cy="7" r="3.2" fill="#fff"/></svg>'+cityName.slice(2):cityName)+'</div>' : '<div></div>')+
+      '<div class="date-line" style="text-align:right;font-size:22px;font-weight:700;color:#378ADD;white-space:nowrap">'+dateStr+'</div>'+
     '</div>'+
+    '<div class="clock-line" id="clock" style="font-size:38px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1;color:#1a1a1a;margin:0 0 0.85rem 0">--:--:--</div>'+
     aHTML+
     '<div class="compare-grid" style="align-items:stretch">'+
       '<div class="now-card today" style="display:flex;flex-direction:column">'+
