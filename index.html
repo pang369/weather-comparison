@@ -1,10 +1,11 @@
 
 
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="ko" translate="no">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="google" content="notranslate" />
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
@@ -27,6 +28,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .city-dropdown { position: relative; flex-shrink: 0; }
 .city-trigger { display: flex; align-items: center; gap: 3px; cursor: pointer; padding: 6px 4px 6px 0; user-select: none; border-right: 1.5px solid #eee; margin-right: 6px; padding-right: 10px; }
 .city-trigger-name { font-size: 15px; font-weight: 700; color: #1a1a1a; white-space: nowrap; }
+.city-trigger-region { font-size: 16px; font-weight: 600; color: #555; white-space: nowrap; }
 .city-trigger-arrow { font-size: 10px; color: #1a1a1a; font-weight: 900; margin-left: 2px; }
 .dropdown-panel { display: none; position: absolute; top: calc(100% + 8px); left: 0; background: #fff; border: 1.5px solid #e0e0e0; border-radius: 14px; z-index: 200; min-width: 180px; box-shadow: 0 6px 24px rgba(0,0,0,0.12); overflow: hidden; max-height: 70vh; overflow-y: auto; }
 .dropdown-panel.open { display: block; }
@@ -37,7 +39,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 
 .top-line { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 2px; }
 .city-name { font-size: 22px; font-weight: 700; color: #1a1a1a; }
-.date-line { font-size: 22px; font-weight: 700; color: #378ADD; text-align: right; }
+.date-line { font-size: 26px; font-weight: 700; color: #378ADD; text-align: right; }
 .clock-line { font-size: 38px; font-weight: 600; font-variant-numeric: tabular-nums; margin-bottom: 0.85rem; }
 
 .alert-box { border-radius: 10px; padding: 10px 13px; margin-bottom: 7px; font-size: 16px; font-weight: 600; }
@@ -49,13 +51,13 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .now-card.today { border-color: #378ADD; border-width: 2px; }
 .card-inline { display: flex; align-items: baseline; gap: 6px; margin-bottom: 4px; flex-wrap: nowrap; overflow: hidden; }
 .card-header { font-size: 16px; color: #222; font-weight: 700; white-space: nowrap; flex-shrink: 0; }
-.card-temp { font-size: 36px; font-weight: 600; line-height: 1; white-space: nowrap; flex-shrink: 0; }
+.card-temp { font-size: 36px; font-weight: 700; line-height: 1; white-space: nowrap; flex-shrink: 0; }
 .card-desc { font-size: 17px; color: #555; margin-top: 2px; font-weight: 400; }
 .card-range-label { font-size: 16px; color: #378ADD; font-weight: 400; margin-top: 6px; }
 .card-range-val { font-size: 20px; color: #378ADD; font-weight: 700; margin-top: 1px; }
 .diff-pill { display: inline-flex; align-items: center; font-size: 17px; font-weight: 700; padding: 5px 14px; border-radius: 8px; margin-top: 0; margin-bottom: 2px; gap: 2px; }
-.diff-cold { background: #D6E8F7; color: #0A3A6B; }
-.diff-warm { background: #FAECE7; color: #993C1D; }
+.diff-cold { background: #D6E8F7; color: #185FA5; }
+.diff-warm { background: #FAECE7; color: #D85A30; }
 .diff-same { background: #e8e8e8; color: #222; }
 
 .arr { font-weight: 900; font-style: normal; line-height: 1; font-size: 1.3em; vertical-align: middle; }
@@ -97,7 +99,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .h-yest { font-size: 18px; color: #333; font-weight: 600; height: 24px; display: flex; align-items: center; }
 .h-diff { font-size: 15px; font-weight: 900; height: 22px; display: flex; align-items: center; gap: 1px; }
 .h-diff.cold { color: #185FA5; }
-.h-diff.warm { color: #993C1D; }
+.h-diff.warm { color: #D85A30; }
 .h-diff.same { color: #555; font-weight: 700; }
 
 .divider { height: 1px; background: #ddd; margin: 1rem 0; }
@@ -131,56 +133,61 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 </style>
 </head>
 <body>
-<div class="app">
+<div class="app" translate="no">
   <div class="search-row">
     <div class="city-dropdown" id="cityDropdown">
       <div class="city-trigger" onclick="toggleDropdown()">
-        <span class="city-trigger-name" id="triggerLabel">首尔</span>
-        <span class="city-trigger-arrow">▼</span>
+        <span class="city-trigger-region" id="triggerRegion">Korea</span>
+        <span class="city-trigger-arrow" style="margin-left:10px">▼</span>
       </div>
       <div class="dropdown-panel" id="dropdownPanel">
         <div class="dropdown-group-label">🇰🇷 韩国</div>
-        <div class="dropdown-item" onclick="selectCity('Seoul','首尔')">首尔</div>
-        <div class="dropdown-item" onclick="selectCity('Busan','釜山')">釜山</div>
-        <div class="dropdown-item" onclick="selectCity('Jeju','济州')">济州</div>
-        <div class="dropdown-item" onclick="selectCity('Incheon','仁川')">仁川</div>
-        <div class="dropdown-item" onclick="selectCity('Daejeon','大田')">大田</div>
-        <div class="dropdown-item" onclick="selectCity('Jeonju','全州')">全州</div>
+        <div class="dropdown-item" onclick="selectCity('Seoul','서울','Korea')">서울</div>
+        <div class="dropdown-item" onclick="selectCity('Busan','부산','Korea')">부산</div>
+        <div class="dropdown-item" onclick="selectCity('Jeju','제주','Korea')">제주</div>
+        <div class="dropdown-item" onclick="selectCity('Incheon','인천','Korea')">인천</div>
+        <div class="dropdown-item" onclick="selectCity('Daejeon','대전','Korea')">대전</div>
+        <div class="dropdown-item" onclick="selectCity('Jeonju','전주','Korea')">전주</div>
         <div class="dropdown-group-label">🇨🇳 中国</div>
-        <div class="dropdown-item" onclick="selectCity('Beijing','北京')">北京</div>
-        <div class="dropdown-item" onclick="selectCity('Shanghai','上海')">上海</div>
-        <div class="dropdown-item" onclick="selectCity('Guangzhou','广州')">广州</div>
-        <div class="dropdown-item" onclick="selectCity('Chengdu','成都')">成都</div>
-        <div class="dropdown-item" onclick="selectCity('Shenzhen','深圳')">深圳</div>
+        <div class="dropdown-item" onclick="selectCity('Beijing','北京','China')">北京</div>
+        <div class="dropdown-item" onclick="selectCity('Shanghai','上海','China')">上海</div>
+        <div class="dropdown-item" onclick="selectCity('Guangzhou','广州','China')">广州</div>
+        <div class="dropdown-item" onclick="selectCity('Chengdu','成都','China')">成都</div>
+        <div class="dropdown-item" onclick="selectCity('Shenzhen','深圳','China')">深圳</div>
         <div class="dropdown-group-label">🇺🇸 美国</div>
-        <div class="dropdown-item" onclick="selectCity('New York','纽约')">纽约</div>
-        <div class="dropdown-item" onclick="selectCity('Los Angeles','洛杉矶')">洛杉矶</div>
-        <div class="dropdown-item" onclick="selectCity('Chicago','芝加哥')">芝加哥</div>
-        <div class="dropdown-item" onclick="selectCity('Dallas','达拉斯')">达拉斯</div>
-        <div class="dropdown-item" onclick="selectCity('Houston','休斯顿')">休斯顿</div>
+        <div class="dropdown-item" onclick="selectCity('New York','New York','USA')">New York</div>
+        <div class="dropdown-item" onclick="selectCity('Los Angeles','Los Angeles','USA')">Los Angeles</div>
+        <div class="dropdown-item" onclick="selectCity('Chicago','Chicago','USA')">Chicago</div>
+        <div class="dropdown-item" onclick="selectCity('Dallas','Dallas','USA')">Dallas</div>
+        <div class="dropdown-item" onclick="selectCity('Houston','Houston','USA')">Houston</div>
         <div class="dropdown-group-label">🇪🇸 西班牙</div>
-        <div class="dropdown-item" onclick="selectCity('Madrid','马德里')">马德里</div>
-        <div class="dropdown-item" onclick="selectCity('Barcelona','巴塞罗那')">巴塞罗那</div>
-        <div class="dropdown-item" onclick="selectCity('Malaga','马拉加')">马拉加</div>
-        <div class="dropdown-item" onclick="selectCity('Alicante','阿利坎特')">阿利坎特</div>
+        <div class="dropdown-item" onclick="selectCity('Madrid','Madrid','España')">Madrid</div>
+        <div class="dropdown-item" onclick="selectCity('Barcelona','Barcelona','España')">Barcelona</div>
+        <div class="dropdown-item" onclick="selectCity('Malaga','Málaga','España')">Málaga</div>
+        <div class="dropdown-item" onclick="selectCity('Alicante','Alicante','España')">Alicante</div>
         <div class="dropdown-group-label">🇹🇭 泰国</div>
-        <div class="dropdown-item" onclick="selectCity('Bangkok','曼谷')">曼谷</div>
-        <div class="dropdown-item" onclick="selectCity('Chiang Mai','清迈')">清迈</div>
+        <div class="dropdown-item" onclick="selectCity('Bangkok','Bangkok','Thailand')">Bangkok</div>
+        <div class="dropdown-item" onclick="selectCity('Chiang Mai','Chiang Mai','Thailand')">Chiang Mai</div>
         <div class="dropdown-group-label">🇸🇬 新加坡</div>
-        <div class="dropdown-item" onclick="selectCity('Singapore','新加坡')">新加坡</div>
+        <div class="dropdown-item" onclick="selectCity('Singapore','Singapore','Singapore')">Singapore</div>
         <div class="dropdown-group-label">🇦🇺 澳洲</div>
-        <div class="dropdown-item" onclick="selectCity('Sydney','悉尼')">悉尼</div>
-        <div class="dropdown-item" onclick="selectCity('Melbourne','墨尔本')">墨尔本</div>
+        <div class="dropdown-item" onclick="selectCity('Sydney','Sydney','Australia')">Sydney</div>
+        <div class="dropdown-item" onclick="selectCity('Melbourne','Melbourne','Australia')">Melbourne</div>
         <div class="dropdown-group-label">🇳🇿 新西兰</div>
-        <div class="dropdown-item" onclick="selectCity('Auckland','奥克兰')">奥克兰</div>
+        <div class="dropdown-item" onclick="selectCity('Auckland','Auckland','New Zealand')">Auckland</div>
       </div>
     </div>
-    <input type="text" id="cityInput" placeholder="或输入城市名" value="Seoul" />
+    <input type="text" id="cityInput" placeholder="或输入城市名" value="Seoul" style="font-size:17px"/>
+    <span style="font-size:11px;color:#1a1a1a;font-weight:900;padding:0 4px;margin-right:20px;cursor:pointer;flex-shrink:0" onclick="toggleDropdown()">▼</span>
     <button class="search-btn" onclick="loadWeather()" title="查询">🔍</button>
   </div>
 
   <button class="gps-btn" id="gpsBtn" onclick="useGPS()">
-    📍 <span id="gpsBtnText">使用我的当前位置（最准确）</span>
+    <svg width="16" height="20" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
+      <path d="M7 0C3.13 0 0 3.13 0 7c0 5.25 7 11 7 11s7-5.75 7-11c0-3.87-3.13-7-7-7z" fill="#2ecc71" stroke="#222" stroke-width="0.8"/>
+      <circle cx="7" cy="7" r="3.2" fill="#378ADD"/>
+    </svg>
+    <span id="gpsBtnText">使用我的当前位置（最准确）</span>
   </button>
 
   <div id="content"><div class="loading">加载中...</div></div>
@@ -220,7 +227,7 @@ var LANG = {
     gpsError: {denied:'定位被拒绝，请在浏览器设置中允许位置权限',unavail:'无法获取位置信息，请检查GPS是否开启',timeout:'定位超时，请重试',default:'定位失败'},
     cityNotFound: '城市未找到，请检查拼写',
     curLoc: '当前位置',
-    curLocIcon: '📍 当前位置',
+    curLocIcon: '当前位置',
     todayNow: '今天现在',
     yesterday: '昨天',
     todayTemp: '今天气温：',
@@ -275,7 +282,7 @@ var LANG = {
     gpsError: {denied:'위치 권한이 거부되었습니다. 브라우저 설정에서 허용해주세요',unavail:'위치 정보를 가져올 수 없습니다. GPS를 확인하세요',timeout:'위치 확인 시간 초과, 다시 시도해주세요',default:'위치 확인 실패'},
     cityNotFound: '도시를 찾을 수 없습니다. 철자를 확인해주세요',
     curLoc: '현재 위치',
-    curLocIcon: '📍 현재 위치',
+    curLocIcon: '현재 위치',
     todayNow: '지금',
     yesterday: '어제',
     todayTemp: '오늘 기온：',
@@ -320,7 +327,7 @@ function setLang(lat, lon) {
   currentLang = isKorea(lat, lon) ? 'ko' : 'zh';
 }
 
-function wmoDesc(c) { return (L('wmo')[c]) || (currentLang==='ko'?'알 수 없음':'未知'); }
+function wmoDesc(c) { return (c!==null&&c!==undefined&&L('wmo')[c]) ? L('wmo')[c] : (currentLang==='ko'?'알 수 없음':'未知'); }
 
 function windDesc(s) { return L('wind')(s); }
 
@@ -357,9 +364,10 @@ function getAlerts(cur) {
 function toggleDropdown(){
   document.getElementById('dropdownPanel').classList.toggle('open');
 }
-function selectCity(eng, zh){
+function selectCity(eng, localName, region){
   document.getElementById('cityInput').value = eng;
-  document.getElementById('triggerLabel').textContent = zh;
+  document.getElementById('triggerLabel').textContent = localName;
+  if(document.getElementById('triggerRegion')) document.getElementById('triggerRegion').textContent = region || eng;
   document.getElementById('dropdownPanel').classList.remove('open');
   loadWeather();
 }
@@ -379,14 +387,38 @@ function useGPS(){
   btn.disabled = true;
 
   navigator.geolocation.getCurrentPosition(
-    function(pos){
+    async function(pos){
       var lat = pos.coords.latitude;
       var lon = pos.coords.longitude;
       setLang(lat, lon);
       document.getElementById('gpsBtnText').textContent = L('gpsBtn');
       btn.classList.remove('loading');
       btn.disabled = false;
-      loadWeatherByCoords(lat, lon, L('curLoc'));
+      // 역지오코딩으로 실제 동명 취득
+      var gpsName = '';
+      try{
+        var lang = isKorea(lat,lon) ? 'ko' : 'zh';
+        var rgUrl = 'https://nominatim.openstreetmap.org/reverse?lat='+lat+'&lon='+lon+'&format=json&accept-language='+lang;
+        var rgRes = await fetch(rgUrl, {headers:{'Accept-Language':lang}});
+        if(rgRes.ok){
+          var rgData = await rgRes.json();
+          var addr = rgData.address || {};
+          if(isKorea(lat,lon)){
+            // 한국: 구 + 동 조합
+            var parts = [];
+            if(addr.city_district||addr.suburb||addr.borough) parts.push(addr.city_district||addr.suburb||addr.borough);
+            if(addr.neighbourhood||addr.quarter||addr.village) parts.push(addr.neighbourhood||addr.quarter||addr.village);
+            gpsName = parts.join(' ') || addr.county || addr.city || L('curLoc');
+          } else {
+            // 해외: 구역 + 도시
+            gpsName = addr.neighbourhood||addr.suburb||addr.quarter||addr.city_district||addr.city||addr.town||addr.county||L('curLoc');
+          }
+        }
+      }catch(e){ gpsName = L('curLoc'); }
+      if(!gpsName) gpsName = L('curLoc');
+      // input/Korea▼는 그대로 유지 — gpsName은 cityName으로만 표시
+      // (수도명 + 물방울 아이콘은 render()의 cityName 영역에 표시)
+      loadWeatherByCoords(lat, lon, '📍'+gpsName);
     },
     function(err){
       document.getElementById('gpsBtnText').textContent = L('gpsBtn');
@@ -403,7 +435,7 @@ function useGPS(){
 let clockTimer = null;
 function startClock(){
   if(clockTimer) clearInterval(clockTimer);
-  function tick(){ var el=document.getElementById('clock'); if(!el){clearInterval(clockTimer);return;} var n=new Date(); el.textContent=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0')+':'+String(n.getSeconds()).padStart(2,'0'); }
+  function tick(){ var el=document.getElementById('clock'); if(!el){clearInterval(clockTimer);return;} var n=new Date(); el.innerHTML=String(n.getHours()).padStart(2,'0')+'<span style="margin:0 3px">:</span>'+String(n.getMinutes()).padStart(2,'0')+'<span style="margin:0 3px">:</span>'+String(n.getSeconds()).padStart(2,'0'); }
   tick(); clockTimer = setInterval(tick, 1000);
 }
 
@@ -426,10 +458,21 @@ async function loadWeather(silent){
   if(!silent) document.getElementById('content').innerHTML = '<div class="loading">'+L('fetching')+'</div>';
   try{
     const gr = await fetch('https://geocoding-api.open-meteo.com/v1/search?name='+encodeURIComponent(city)+'&count=1&language=zh&format=json');
+    // language will be overridden after setLang below if needed
     const gd = await gr.json();
     if(!gd.results||!gd.results.length) throw new Error(L('cityNotFound'));
-    const {latitude:lat, longitude:lon, name:cityName} = gd.results[0];
+    var lat = gd.results[0].latitude, lon = gd.results[0].longitude;
     setLang(lat, lon);
+    // Re-fetch name in correct language
+    var langCode = isKorea(lat, lon) ? 'ko' : 'zh';
+    var cityName = gd.results[0].name;
+    if(langCode === 'ko') {
+      try {
+        var gr2 = await fetch('https://geocoding-api.open-meteo.com/v1/search?name='+encodeURIComponent(city)+'&count=1&language=ko&format=json');
+        var gd2 = await gr2.json();
+        if(gd2.results && gd2.results.length) cityName = gd2.results[0].name;
+      } catch(e2) {}
+    }
     await loadWeatherByCoords(lat, lon, cityName, silent);
   }catch(e){
     document.getElementById('content').innerHTML = '<div class="error-msg">'+e.message+'</div>';
@@ -501,13 +544,59 @@ async function loadWeatherByCoords(lat, lon, cityName, silent){
 
   try{
     var model = isKorea(lat, lon) ? 'kma_seamless' : 'best_match';
-    const fr = await fetch(
+
+    // 미래 7일: 두 번 요청 — kma_seamless(기온/날씨) + best_match(UV/풍속/강수)
+    const frFuture = await fetch(
       'https://api.open-meteo.com/v1/forecast?latitude='+lat+'&longitude='+lon+
       '&hourly=temperature_2m,apparent_temperature,relativehumidity_2m,windspeed_10m,weathercode'+
       '&daily=temperature_2m_max,temperature_2m_min,weathercode,windspeed_10m_max,precipitation_sum,uv_index_max'+
-      '&past_days=7&forecast_days=7&timezone=auto&models='+model
+      '&forecast_days=8&timezone=auto&models='+model
     );
-    const fc = await fr.json();
+    const fc = await frFuture.json();
+
+    // UV/풍속 보완: kma_seamless가 uv_index_max 미지원인 경우 best_match로 보완
+    var fcBest = null;
+    if(isKorea(lat, lon)){
+      try{
+        var frBest = await fetch(
+          'https://api.open-meteo.com/v1/forecast?latitude='+lat+'&longitude='+lon+
+          '&daily=uv_index_max,windspeed_10m_max,precipitation_sum,temperature_2m_max,temperature_2m_min,weathercode'+
+          '&forecast_days=8&timezone=auto&models=best_match'
+        );
+        if(frBest.ok) fcBest = await frBest.json();
+      }catch(e){ console.warn('best_match 보완 실패:', e); }
+    }
+
+    // fc.daily에 UV가 없거나 전부 null이면 fcBest로 교체
+    if(fcBest && fcBest.daily){
+      var uvArr = fc.daily.uv_index_max;
+      var uvEmpty = !uvArr || uvArr.every(function(v){ return v===null||v===undefined; });
+      if(uvEmpty && fcBest.daily.uv_index_max) fc.daily.uv_index_max = fcBest.daily.uv_index_max;
+      var windArr = fc.daily.windspeed_10m_max;
+      var windEmpty = !windArr || windArr.every(function(v){ return v===null||v===undefined; });
+      if(windEmpty && fcBest.daily.windspeed_10m_max) fc.daily.windspeed_10m_max = fcBest.daily.windspeed_10m_max;
+      var tmpEmpty = !fc.daily.temperature_2m_max || fc.daily.temperature_2m_max.every(function(v){ return v===null; });
+      if(tmpEmpty && fcBest.daily.temperature_2m_max){
+        fc.daily.temperature_2m_max = fcBest.daily.temperature_2m_max;
+        fc.daily.temperature_2m_min = fcBest.daily.temperature_2m_min;
+        fc.daily.weathercode = fcBest.daily.weathercode;
+        fc.daily.time = fcBest.daily.time;
+      }
+    }
+
+    // 과거 7일 (best_match — kma_seamless 과거 미지원)
+    var fcHistory = null;
+    try{
+      function fmtD(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+      var dNow = new Date();
+      var hrHist = await fetch(
+        'https://historical-forecast-api.open-meteo.com/v1/forecast?latitude='+lat+'&longitude='+lon+
+        '&hourly=temperature_2m,weathercode'+
+        '&daily=temperature_2m_max,temperature_2m_min,weathercode'+
+        '&start_date='+fmtD(new Date(dNow-7*86400000))+'&end_date='+fmtD(new Date(dNow-86400000))+'&timezone=auto&models=best_match'
+      );
+      if(hrHist.ok) fcHistory = await hrHist.json();
+    }catch(e){ console.warn('Historical API 실패:', e); }
 
     let air = null;
     try{
@@ -518,25 +607,22 @@ async function loadWeatherByCoords(lat, lon, cityName, silent){
       if(ar.ok) air = await ar.json();
     }catch(e){}
 
-    // 한국이면 KMA 초단기실황으로 현재 기온/습도/풍속 덮어쓰기
     let kmaActual = null;
     if(isKorea(lat, lon)){
-      try{ kmaActual = await fetchKmaActual(lat, lon); }catch(e){ console.warn('KMA실황 실패, Open-Meteo 사용:', e); }
+      try{ kmaActual = await fetchKmaActual(lat, lon); }catch(e){ console.warn('KMA실황 실패:', e); }
     }
 
-    if(cityName === L('curLoc') || cityName === '当前位置' || cityName === '현재 위치'){
-      cityName = L('curLocIcon');
-    }
+    var fcPast = fcHistory || null;
 
     lastRefreshTime = new Date();
-    render(fc, air, cityName, kmaActual);
+    render(fc, air, cityName, kmaActual, fcPast, fcHistory);
     scheduleAutoRefresh();
   }catch(e){
     document.getElementById('content').innerHTML = '<div class="error-msg">'+e.message+'</div>';
   }
 }
 
-function render(fc, air, cityName, kmaActual){
+function render(fc, air, cityName, kmaActual, fcPast, fcHistory){
   const now = new Date(), nowH = now.getHours();
   var days = L('days');
   var dateStr;
@@ -549,20 +635,24 @@ function render(fc, air, cityName, kmaActual){
   const hours = fc.hourly.time.map(function(t,i){
     return{
       time: new Date(t),
-      temp: Math.round(fc.hourly.temperature_2m[i]),
-      feels: Math.round(fc.hourly.apparent_temperature[i]),
+      temp: fc.hourly.temperature_2m[i] !== null ? Math.round(fc.hourly.temperature_2m[i]) : null,
+      feels: fc.hourly.apparent_temperature[i] !== null ? Math.round(fc.hourly.apparent_temperature[i]) : null,
       humid: fc.hourly.relativehumidity_2m[i],
-      wind: fc.hourly.windspeed_10m[i]/3.6,
+      wind: fc.hourly.windspeed_10m[i] !== null ? fc.hourly.windspeed_10m[i]/3.6 : null,
       wmo: fc.hourly.weathercode[i]
     };
   });
 
+  // kma_seamless hourly 데이터에서 null 처리만 적용
+
   const todayStr = now.toDateString();
-  let ci = -1;
-  for(var ti=hours.length-1;ti>=0;ti--){
-    if(hours[ti].time.toDateString()===todayStr && hours[ti].time<=now){ ci=ti; break; }
+  let ci = 0; // forecast_days만이므로 0번 = 오늘 자정, 현재 시각에 가장 가까운 인덱스 찾기
+  var minDiff = Infinity;
+  for(var ti=0;ti<hours.length;ti++){
+    var timeDiff = Math.abs(hours[ti].time - now);
+    if(timeDiff < minDiff){ minDiff=timeDiff; ci=ti; }
+    if(hours[ti].time > now && timeDiff < 3600000) break;
   }
-  if(ci<0) ci = Math.max(0, hours.length-1);
 
   let cur = hours[ci];
   // 한국이면 KMA 초단기실황으로 현재값 덮어쓰기
@@ -576,18 +666,6 @@ function render(fc, air, cityName, kmaActual){
       time: cur.time
     };
   }
-  const yestDate = new Date(now-86400000).toDateString();
-  let yi = -1;
-  for(var tj=0;tj<hours.length;tj++){
-    if(hours[tj].time.toDateString()===yestDate && hours[tj].time.getHours()===nowH){ yi=tj; break; }
-  }
-  const yest = yi>=0 ? hours[yi] : hours[Math.max(0,ci-24)];
-  const diff = cur.temp - yest.temp;
-  const dc = diff<0?'diff-cold':diff>0?'diff-warm':'diff-same';
-  var dt;
-  if(diff<0) dt = L('colder').replace('{v}', Math.abs(diff));
-  else if(diff>0) dt = L('warmer').replace('{v}', diff);
-  else dt = L('similar');
 
   const alerts = getAlerts(cur);
   const aHTML = alerts.map(function(a){return'<div class="alert-box alert-'+a.level+'">'+(a.level==='danger'?'⚠ ':'· ')+a.text+'</div>';}).join('');
@@ -606,52 +684,160 @@ function render(fc, air, cityName, kmaActual){
     '</div>';
   }
 
-  const todayHigh = Math.round(fc.daily.temperature_2m_max[7]);
-  const todayLow  = Math.round(fc.daily.temperature_2m_min[7]);
-  const yestHigh  = Math.round(fc.daily.temperature_2m_max[6]);
-  const yestLow   = Math.round(fc.daily.temperature_2m_min[6]);
+  function toApiDate(d) {
+    return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  }
+  // 오늘 최고/최저: daily 예보값 우선, hourly와 KMA 실측값으로 보정
+  var todayJsStr = now.toDateString();
+  var todayApiDate2 = toApiDate(now);
+  var todayDailyIdx2 = 0; // forecast_days만 요청시 인덱스 0 = 오늘
+  if(fc.daily && fc.daily.time){ for(var kk=0;kk<fc.daily.time.length;kk++){ if(fc.daily.time[kk]===todayApiDate2){todayDailyIdx2=kk;break;} } }
+  var todayHigh, todayLow;
+  // 먼저 daily 예보값 시도
+  if(todayDailyIdx2>=0 && fc.daily.temperature_2m_max[todayDailyIdx2]!==null && !isNaN(fc.daily.temperature_2m_max[todayDailyIdx2])){
+    todayHigh = Math.round(fc.daily.temperature_2m_max[todayDailyIdx2]);
+    todayLow  = Math.round(fc.daily.temperature_2m_min[todayDailyIdx2]);
+  } else {
+    // daily null이면 hourly에서 계산
+    var todayTemps = hours.filter(function(x){ return x.time.toDateString()===todayJsStr && x.temp!==null && !isNaN(x.temp); }).map(function(x){ return x.temp; });
+    todayHigh = todayTemps.length > 0 ? Math.max.apply(null, todayTemps) : '--';
+    todayLow  = todayTemps.length > 0 ? Math.min.apply(null, todayTemps) : '--';
+  }
+  // KMA 실측 현재값이 daily 최고보다 높으면 최고 업데이트
+  if(kmaActual && kmaActual.temp !== null && todayHigh !== '--' && kmaActual.temp > todayHigh) todayHigh = kmaActual.temp;
+  if(kmaActual && kmaActual.temp !== null && todayLow !== '--' && kmaActual.temp < todayLow)   todayLow  = kmaActual.temp;
 
-  const uvVal = fc.daily.uv_index_max[7] || 0;
+  // 어제 최고/최저 및 동시각 기온: Historical Forecast API 데이터(fcPast) 우선 사용
+  var yestDate  = new Date(now - 86400000);
+  var yestJsStr = yestDate.toDateString();
+  var yestApiDate = toApiDate(yestDate);
+  var yestHigh = '--', yestLow = '--';
+  var yestSameHourTemp = null, yestSameHourWmo = null;
+
+  if(fcPast && fcPast.daily && fcPast.daily.time && fcPast.daily.time.length > 0){
+    // Historical API는 딱 어제 하루만 반환하므로 인덱스 0
+    var ph = fcPast.daily.temperature_2m_max[0], pl = fcPast.daily.temperature_2m_min[0];
+    if(ph !== null && !isNaN(ph)) yestHigh = Math.round(ph);
+    if(pl !== null && !isNaN(pl)) yestLow  = Math.round(pl);
+  }
+  if(yestHigh === '--') {
+    // fallback: kma_seamless hourly에서 계산
+    var yestTemps2 = hours.filter(function(x){ return x.time.toDateString()===yestJsStr && x.temp!==null && !isNaN(x.temp); }).map(function(x){ return x.temp; });
+    if(yestTemps2.length > 0){ yestHigh = Math.max.apply(null, yestTemps2); yestLow = Math.min.apply(null, yestTemps2); }
+  }
+
+  // 어제 시간별 맵 — 직접 날짜 계산 (timezone 오류 완전 차단)
+  var yestHourMap = {};
+  var _yestD = new Date(now.getFullYear(), now.getMonth(), now.getDate()-1);
+  var _yestKey = _yestD.getFullYear()+'-'+String(_yestD.getMonth()+1).padStart(2,'0')+'-'+String(_yestD.getDate()).padStart(2,'0');
+  if(fcHistory && fcHistory.hourly && fcHistory.hourly.time){
+    for(var yhi=0; yhi<fcHistory.hourly.time.length; yhi++){
+      var yhtStr = fcHistory.hourly.time[yhi]; // 'YYYY-MM-DDTHH:00'
+      if(yhtStr.slice(0,10) === _yestKey){
+        var yhHour = parseInt(yhtStr.slice(11,13), 10);
+        var yhTemp = fcHistory.hourly.temperature_2m[yhi];
+        if(yhTemp !== null && yhTemp !== undefined) yestHourMap[yhHour] = Math.round(yhTemp);
+      }
+    }
+  }
+
+  // yestApiDate(YYYY-MM-DD) + nowH → 어제 동시각 문자열로 직접 비교 (timezone 오류 방지)
+  // yestSameHourTemp: yestHourMap이 앞에서 이미 생성됨 → 직접 사용
+  var nowHStr = String(nowH).padStart(2,'0');
+  var yestSameHourKey = _yestKey+'T'+nowHStr; // 'YYYY-MM-DDTHH'
+  if(fcPast && fcPast.hourly && fcPast.hourly.time){
+    for(var hi2=0; hi2<fcPast.hourly.time.length; hi2++){
+      var htStr2 = fcPast.hourly.time[hi2];
+      if(htStr2.slice(0,13) === yestSameHourKey){
+        if(fcPast.hourly.temperature_2m[hi2] !== null) yestSameHourTemp = Math.round(fcPast.hourly.temperature_2m[hi2]);
+        if(fcPast.hourly.weathercode && fcPast.hourly.weathercode[hi2] !== null) yestSameHourWmo = fcPast.hourly.weathercode[hi2];
+        break;
+      }
+    }
+  }
+  if(yestSameHourTemp === null && yestHourMap[nowH] !== undefined){
+    yestSameHourTemp = yestHourMap[nowH];
+  }
+
+  const yest = { temp: yestSameHourTemp, wmo: yestSameHourWmo };
+  const diff = yest.temp !== null ? (cur.temp - yest.temp) : null;
+  const dc = diff===null?'diff-same':diff<0?'diff-cold':diff>0?'diff-warm':'diff-same';
+  var dt;
+  if(diff===null) dt = currentLang==='ko'?'어제 데이터 없음':'暂无昨日数据';
+  else if(diff<0) dt = L('colder').replace('{v}', Math.abs(diff));
+  else if(diff>0) dt = L('warmer').replace('{v}', diff);
+  else dt = L('similar');
+  var _pillExtraStyle = (diff===null)?';background:#FCEBEB;color:#c0392b':'';
+
+  var todayApiDate = toApiDate(now);
+  var todayDailyIdx = 0; // forecast_days만 요청시 인덱스 0 = 오늘
+  if(fc.daily && fc.daily.time){
+    for(var ki=0;ki<fc.daily.time.length;ki++){
+      if(fc.daily.time[ki]===todayApiDate){ todayDailyIdx=ki; break; }
+    }
+  }
+  var uvArr = fc.daily && fc.daily.uv_index_max ? fc.daily.uv_index_max : [];
+  var uvVal = 0;
+  for(var uvi2=todayDailyIdx; uvi2<uvArr.length; uvi2++){
+    if(uvArr[uvi2]!==null && uvArr[uvi2]!==undefined && !isNaN(uvArr[uvi2])){ uvVal=uvArr[uvi2]; break; }
+  }
   const uvi = L('uv')(uvVal);
   const uvColors = ['#4CAF50','#FFC107','#FF9800','#F44336','#9C27B0'];
-  const uvSegs = uvColors.map(function(c,i){return'<div class="uv-seg'+(i<uvi.level?' active':'')+'" style="background:'+c+'"></div>';}).join('');
+  // UV 바: 각 세그먼트를 relative로 감싸고 현재 레벨 세그먼트 위에 ▲ 마커
+  var uvLevel = uvi.level; // 1~5
+  var uvSegsHTML = uvColors.map(function(c,i){
+    var isActive = i < uvLevel;
+    var isCurrent = i === uvLevel-1; // 현재 레벨 세그먼트
+    return '<div style="flex:1;position:relative">'+
+      '<div style="height:8px;border-radius:4px;background:'+c+';opacity:'+(isActive?'1':'0.28')+'"></div>'+
+      (isCurrent?'<div style="position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);font-size:10px;color:'+c+';line-height:1">▲</div>':'')+
+    '</div>';
+  }).join('');
   const uvHTML = '<div class="uv-card" style="background:#ebebeb">'+
     '<div style="font-size:15px;color:#888;font-weight:400;margin-bottom:2px;">'+L('uvi')+'</div>'+
     '<div style="display:flex;align-items:baseline;gap:10px;">'+
       '<div class="stat-val" style="color:'+uvi.color+'">'+uvi.label+'</div>'+
       '<div style="font-size:15px;color:#555;font-weight:600">UV '+uvVal.toFixed(1)+'</div>'+
     '</div>'+
-    '<div class="uv-bar-wrap">'+uvSegs+'</div>'+
+    '<div style="display:flex;gap:4px;margin-top:6px;margin-bottom:18px;">'+uvSegsHTML+'</div>'+
   '</div>';
 
+  // 과거 7일: fcHistory 사용 (best_match), 없으면 비워둠
   let pastWeekHTML = '';
-  for(var pi=6;pi>=0;pi--){
-    var ph = Math.round(fc.daily.temperature_2m_max[pi]);
-    var pl = Math.round(fc.daily.temperature_2m_min[pi]);
-    var pw = fc.daily.weathercode[pi];
-    var pd = new Date(fc.daily.time[pi]);
-    var pdlbl;
-    if(currentLang==='ko'){
-      var diffDays = Math.round((now - pd) / 86400000);
-      pdlbl = diffDays===1 ? L('yesterday') : days[pd.getDay()]+' '+(pd.getMonth()+1)+'/'+(pd.getDate());
-    } else {
-      pdlbl = (now.getDate()-pd.getDate()===1||(now.getDate()===1&&pd.getDate()>=28)) ? L('yesterday') : days[pd.getDay()]+' '+(pd.getMonth()+1)+'/'+pd.getDate();
+  if(fcHistory && fcHistory.daily && fcHistory.daily.time && fcHistory.daily.time.length > 0){
+    var phArr = fcHistory.daily.time;
+    for(var pi=phArr.length-1;pi>=0;pi--){
+      var phv = fcHistory.daily.temperature_2m_max[pi];
+      var plv = fcHistory.daily.temperature_2m_min[pi];
+      var pwv = fcHistory.daily.weathercode[pi];
+      var pd = new Date(phArr[pi]);
+      var phRound = (phv!==null&&phv!==undefined&&!isNaN(phv))?Math.round(phv):'--';
+      var plRound = (plv!==null&&plv!==undefined&&!isNaN(plv))?Math.round(plv):'--';
+      var pdlbl;
+      if(currentLang==='ko'){
+        var diffDays = Math.round((now - pd) / 86400000);
+        pdlbl = diffDays===1 ? L('yesterday') : days[pd.getDay()]+' '+(pd.getMonth()+1)+'/'+(pd.getDate());
+      } else {
+        pdlbl = (now.getDate()-pd.getDate()===1||(now.getDate()===1&&pd.getDate()>=28)) ? L('yesterday') : days[pd.getDay()]+' '+(pd.getMonth()+1)+'/'+pd.getDate();
+      }
+      pastWeekHTML += '<div class="past-week-row">'+
+        '<div class="week-day">'+pdlbl+'</div>'+
+        '<div class="week-desc">'+wmoDesc(pwv)+'</div>'+
+        '<div class="week-range">'+(phRound!=='--'?phRound+'°':'--')+' <span class="week-low">/ '+(plRound!=='--'?plRound+'°':'--')+'</span></div>'+
+      '</div>';
     }
-    pastWeekHTML += '<div class="past-week-row">'+
-      '<div class="week-day">'+pdlbl+'</div>'+
-      '<div class="week-desc">'+wmoDesc(pw)+'</div>'+
-      '<div class="week-range">'+ph+'° <span class="week-low">/ '+pl+'°</span></div>'+
-    '</div>';
   }
+
+  // fcHistory에서 어제 시간별 기온 맵 생성 (시각 → 기온)
+  // yestHourMap은 위에서 이미 생성됨
 
   let hoursHTML = '';
   const startIdx = ci;
   const endIdx = Math.min(startIdx+24, hours.length);
   for(var idx=startIdx; idx<endIdx; idx++){
     var e = hours[idx];
-    var ye = hours[idx-24] || null;
-    var yt = ye ? ye.temp : null;
-    var d = yt!==null ? e.temp-yt : null;
+    var yt = (yestHourMap[e.time.getHours()] !== undefined) ? yestHourMap[e.time.getHours()] : null;
+    var d = (yt!==null && e.temp!==null && e.temp!==undefined && !isNaN(e.temp)) ? (e.temp-yt) : null;
     var h = e.time.getHours();
     var lbl;
     if(currentLang==='ko'){
@@ -664,7 +850,7 @@ function render(fc, air, cityName, kmaActual){
     var dt2 = d!==null?(d<0?'<i class="arr arr-down">↓</i>'+Math.abs(d)+'°':d>0?'<i class="arr arr-up">↑</i>'+d+'°':'－'):'-';
     hoursHTML += '<div class="hour-col'+(isCurrent?' current-hour':'')+'">'+
       '<div class="h-label">'+lbl+'</div>'+
-      '<div class="h-today">'+e.temp+'°</div>'+
+      '<div class="h-today">'+(e.temp!==null&&e.temp!==undefined&&!isNaN(e.temp)?e.temp+'°':'--')+'</div>'+
       '<div class="h-sep"><div class="h-sep-line"></div></div>'+
       '<div class="h-yest">'+(yt!==null?yt+'°':'-')+'</div>'+
       '<div class="h-diff '+dcc+'">'+dt2+'</div>'+
@@ -680,22 +866,28 @@ function render(fc, air, cityName, kmaActual){
       '<div class="leg-item leg-diff">'+L('legendDiff')+'</div>'+
     '</div>';
 
+  // 미래 7일: fc.daily는 이제 인덱스 0부터 시작 (past_days 없음)
   let weekHTML = '';
-  fc.daily.time.slice(7,14).forEach(function(ds,i){
-    var high = Math.round(fc.daily.temperature_2m_max[i+7]);
-    var low  = Math.round(fc.daily.temperature_2m_min[i+7]);
-    var wmo  = fc.daily.weathercode[i+7];
-    var windMs = (fc.daily.windspeed_10m_max[i+7]/3.6).toFixed(1);
-    var precip = fc.daily.precipitation_sum[i+7];
-    var dobj = new Date(ds);
-    var lbl = i===0 ? L('today') : i===1 ? L('tomorrow') : days[dobj.getDay()];
-    weekHTML += '<div class="week-row">'+
-      '<div class="week-day">'+lbl+'</div>'+
-      '<div class="week-desc">'+wmoDesc(wmo)+(precip>0?' 💧'+precip+'mm':'')+'</div>'+
-      '<div class="week-range">'+high+'° <span class="week-low">/ '+low+'°</span></div>'+
-      '<div class="week-wind">'+windDesc(parseFloat(windMs))+'&thinsp;<span class="week-wind-ms">'+windMs+'</span><span style="font-size:12px;color:#999">m/s</span></div>'+
-    '</div>';
-  });
+  if(fc.daily && fc.daily.time){
+    fc.daily.time.forEach(function(ds,i){
+      var highRaw = fc.daily.temperature_2m_max[i];
+      var lowRaw  = fc.daily.temperature_2m_min[i];
+      var high = (highRaw!==null&&highRaw!==undefined&&!isNaN(highRaw))?Math.round(highRaw):'--';
+      var low  = (lowRaw !==null&&lowRaw !==undefined&&!isNaN(lowRaw)) ?Math.round(lowRaw) :'--';
+      var wmo  = fc.daily.weathercode[i];
+      var windRaw = fc.daily.windspeed_10m_max ? fc.daily.windspeed_10m_max[i] : null;
+      var windMs = (windRaw!==null&&windRaw!==undefined)?((windRaw/3.6).toFixed(1)):'0.0';
+      var precip = (fc.daily.precipitation_sum && fc.daily.precipitation_sum[i]) || 0;
+      var dobj = new Date(ds);
+      var lbl = i===0 ? L('today') : i===1 ? L('tomorrow') : days[dobj.getDay()];
+      weekHTML += '<div class="week-row">'+
+        '<div class="week-day">'+lbl+'</div>'+
+        '<div class="week-desc">'+wmoDesc(wmo)+(precip>0?' 💧'+precip+'mm':'')+'</div>'+
+        '<div class="week-range">'+(high!=='--'?high+'°':'--')+' <span class="week-low">/ '+(low!=='--'?low+'°':'--')+'</span></div>'+
+        '<div class="week-wind">'+windDesc(parseFloat(windMs))+'&thinsp;<span class="week-wind-ms">'+windMs+'</span><span style="font-size:12px;color:#999">m/s</span></div>'+
+      '</div>';
+    });
+  }
 
   var refreshStr = lastRefreshTime ?
     L('refresh').replace('{t}', String(lastRefreshTime.getHours()).padStart(2,'0')+':'+String(lastRefreshTime.getMinutes()).padStart(2,'0')) :
@@ -704,34 +896,51 @@ function render(fc, air, cityName, kmaActual){
   // Update data source footer language
   var ds = document.querySelector('.data-source');
   if(ds){
+    var line1;
+    if(isKorea(lastLat, lastLon)){
+      line1 = L('dataLine1');
+    } else {
+      line1 = currentLang==='ko'
+        ? '1）현재 기온・습도・풍속・날씨 → <a href="https://open-meteo.com" target="_blank">Open-Meteo</a>（현지 수치예보 모델）'
+        : '1）当前气温・湿度・风速・天气 → <a href="https://open-meteo.com" target="_blank">Open-Meteo</a>（当地数值预报模型）';
+    }
     ds.innerHTML = '<div class="data-source-title">'+L('dataTitle')+'</div>'+
-      L('dataLine1')+'<br>'+L('dataLine2')+'<br>'+L('dataLine3');
+      line1+'<br>'+L('dataLine2')+'<br>'+L('dataLine3');
   }
 
   document.getElementById('content').innerHTML =
     '<div class="refresh-bar">'+refreshStr+'</div>'+
-    '<div class="top-line"><span class="city-name">'+cityName+'</span><span class="date-line">'+dateStr+'</span></div>'+
-    '<div class="clock-line" id="clock">--:--:--</div>'+
-    aHTML+
-    '<div class="compare-grid">'+
-      '<div class="now-card today">'+
-        '<div class="card-inline"><span class="card-header">'+L('todayNow')+'</span><span class="card-temp">'+cur.temp+'°</span></div>'+
-        '<div class="diff-pill '+dc+'">'+dt+'</div>'+
-        '<div class="card-desc">'+wmoDesc(cur.wmo)+'</div>'+
-        '<div class="card-range-label">'+L('todayTemp')+'</div>'+
-        '<div class="card-range-val">'+todayHigh+'° / '+todayLow+'°</div>'+
+    '<div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:0.85rem">'+
+      '<div>'+
+        (cityName ? '<div class="city-name" style="font-size:20px;font-weight:700;margin-bottom:2px;display:flex;align-items:center;gap:5px">'+(cityName.startsWith('📍')?'<svg width="13" height="17" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;margin-top:1px"><path d="M7 0C3.13 0 0 3.13 0 7c0 5.25 7 11 7 11s7-5.75 7-11c0-3.87-3.13-7-7-7z" fill="#2ecc71" stroke="#222" stroke-width="0.8"/><circle cx="7" cy="7" r="3.2" fill="#378ADD"/></svg>'+cityName.slice(2):cityName)+'</div>' : '')+
+        '<div class="clock-line" id="clock" style="font-size:38px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1;color:#1a1a1a;margin:0">--:--:--</div>'+
       '</div>'+
-      '<div class="now-card">'+
-        '<div class="card-inline"><span class="card-header">'+L('yesterday')+' '+nowH+L('hour')+'</span><span class="card-temp">'+yest.temp+'°</span></div>'+
-        '<div class="diff-pill" style="visibility:hidden">placeholder</div>'+
-        '<div class="card-desc">'+wmoDesc(yest.wmo)+'</div>'+
+      '<div class="date-line" style="text-align:right;font-size:26px;font-weight:700;color:#378ADD;padding-bottom:4px">'+dateStr+'</div>'+
+    '</div>'+
+    aHTML+
+    '<div class="compare-grid" style="align-items:stretch">'+
+      '<div class="now-card today" style="display:flex;flex-direction:column">'+
+        '<div id="pill-wrap" style="display:flex;align-items:center;margin-bottom:10px;min-height:44px">'+
+          '<div class="diff-pill '+dc+'" style="font-size:16px;font-weight:800;padding:6px 12px;line-height:1.3'+_pillExtraStyle+'">'+dt+'</div>'+
+        '</div>'+
+        '<div class="card-inline"><span class="card-header">'+L('todayNow')+'</span><span class="card-temp">'+cur.temp+'°</span></div>'+
+        '<div class="card-desc">'+wmoDesc(cur.wmo)+'</div>'+
+        '<div style="flex:1;min-height:12px"></div>'+
+        '<div class="card-range-label">'+L('todayTemp')+'</div>'+
+        '<div class="card-range-val">'+(todayHigh!=='--'?todayHigh+'° / '+todayLow+'°':'--')+'</div>'+
+      '</div>'+
+      '<div class="now-card" id="yest-card" style="display:flex;flex-direction:column">'+
+        '<div id="yest-top" style="font-size:13px;color:#aaa;font-weight:500;margin-bottom:10px;min-height:44px;display:flex;align-items:center">'+L('yesterday')+' '+nowH+L('hour')+'</div>'+
+        '<div class="card-inline"><span class="card-header" style="visibility:hidden">x</span><span class="card-temp">'+(yest.temp !== null ? yest.temp+'°' : '--')+'</span></div>'+
+        '<div class="card-desc">'+(yest.wmo !== null ? wmoDesc(yest.wmo) : (currentLang==='ko'?'정보 없음':'暂无数据'))+'</div>'+
+        '<div style="flex:1;min-height:12px"></div>'+
         '<div class="card-range-label">'+L('yesterdayTemp')+'</div>'+
-        '<div class="card-range-val">'+yestHigh+'° / '+yestLow+'°</div>'+
+        '<div class="card-range-val">'+(yestHigh!=='--'?yestHigh+'° / '+yestLow+'°':'--')+'</div>'+
       '</div>'+
     '</div>'+
     '<div class="stats-row">'+
       '<div class="stat-card"><div class="stat-label">'+L('humidity')+L('humid')(cur.humid)+'</div><div class="stat-val">'+cur.humid+'%</div></div>'+
-      '<div class="stat-card"><div class="stat-label">'+L('windSpeed')+windDesc(cur.wind)+'</div><div class="stat-val">'+cur.wind.toFixed(1)+'<span style="font-size:15px;font-weight:400"> m/s</span></div></div>'+
+      '<div class="stat-card"><div class="stat-label">'+L('windSpeed')+(cur.wind !== null ? windDesc(cur.wind) : '')+'</div><div class="stat-val">'+(cur.wind !== null ? cur.wind.toFixed(1) : '--')+'<span style="font-size:15px;font-weight:400"> m/s</span></div></div>'+
     '</div>'+
     aqiHTML+
     uvHTML+
@@ -744,6 +953,12 @@ function render(fc, air, cityName, kmaActual){
     '<div class="week-list" style="gap:4px">'+pastWeekHTML+'</div>';
 
   startClock();
+  // pill-wrap 높이 → yest-top 높이 동기화 (두 카드 상단 정렬)
+  requestAnimationFrame(function(){
+    var pw = document.getElementById('pill-wrap');
+    var yt2 = document.getElementById('yest-top');
+    if(pw && yt2){ yt2.style.minHeight = pw.offsetHeight+'px'; }
+  });
 }
 
 document.getElementById('cityInput').addEventListener('keydown',function(e){if(e.key==='Enter')loadWeather();});
