@@ -907,13 +907,15 @@ function render(fc, air, cityName, kmaActual, fcPast, fcHistory){
       lbl = h===0 ? L('midnight') : h===12 ? L('noon') : h+L('hour');
     }
     var isCurrent = (idx===ci);
+    // 현재 시각 칸은 cur.temp(실측값)를 우선 사용
+    var displayTemp = isCurrent ? cur.temp : (e.temp!==null&&e.temp!==undefined&&!isNaN(e.temp) ? e.temp : null);
     var dcc = d!==null?(d<0?'cold':d>0?'warm':'same'):'same';
-    var dt2 = d!==null?(d<0?'<i class="arr arr-down">↓</i>'+Math.abs(d)+'°':d>0?'<i class="arr arr-up">↑</i>'+d+'°':'－'):'-';
+    var dt2 = d!==null?(d<0?'<i class="arr arr-down">↓</i>'+Math.abs(d)+'°':d>0?'<i class="arr arr-up">↑</i>'+d+'°':'－'):'--';
     hoursHTML += '<div class="hour-col'+(isCurrent?' current-hour':'')+'">'+
       '<div class="h-label">'+lbl+'</div>'+
-      '<div class="h-today">'+(e.temp!==null&&e.temp!==undefined&&!isNaN(e.temp)?e.temp+'°':'--')+'</div>'+
+      '<div class="h-today">'+(displayTemp!==null?displayTemp+'°':'--')+'</div>'+
       '<div class="h-sep"><div class="h-sep-line"></div></div>'+
-      '<div class="h-yest">'+(yt!==null?yt+'°':'-')+'</div>'+
+      '<div class="h-yest">'+(yt!==null?yt+'°':'--')+'</div>'+
       '<div class="h-diff '+dcc+'">'+dt2+'</div>'+
     '</div>';
   }
